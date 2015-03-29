@@ -1,0 +1,19 @@
+- name: Update package repository
+  apt: update-cache=yes 
+       cache_valid_time=99360
+
+- name: Install the ntp daemon
+  apt: pkg=ntp state=installed
+
+- name: Set the correct timezone (that the ntp daemon needs)
+  file: src=/usr/share/zoneinfo/{{ timezone }} 
+        dest=/etc/localtime 
+        state=link 
+        force=yes
+
+- name: Start the ntp daemon and ensure autostart
+  service: name=ntp 
+           state=restarted 
+           enabled=true
+
+
